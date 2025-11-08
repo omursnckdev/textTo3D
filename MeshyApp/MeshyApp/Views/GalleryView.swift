@@ -304,10 +304,8 @@ struct ModelDetailView: View {
                     }
                 }
             }
-            .sheet(isPresented: $showARView) {
-                if let usdzURL = model.usdzURL, let url = URL(string: usdzURL) {
-                    ARQuickLookView(modelURL: url)
-                }
+            .fullScreenCover(isPresented: $showARView) {
+                AdvancedARView(model: model)
             }
             .confirmationDialog("Export Model", isPresented: $showExportOptions) {
                 ForEach(ModelFormat.allCases, id: \.self) { format in

@@ -11,6 +11,7 @@ struct HomeView: View {
     @EnvironmentObject var authService: AuthenticationService
     @State private var showTextTo3D = false
     @State private var showImageTo3D = false
+    @State private var showBatchGeneration = false
 
     var body: some View {
         NavigationView {
@@ -79,6 +80,18 @@ struct HomeView: View {
                                 showImageTo3D = true
                             }
                             .padding(.horizontal)
+
+                            // Batch generation card
+                            CreationOptionCard(
+                                title: "Batch Generation",
+                                description: "Generate multiple models at once",
+                                icon: "square.stack.3d.up.fill",
+                                gradient: NeonTheme.glowGradient,
+                                glowColor: NeonTheme.neonCyan
+                            ) {
+                                showBatchGeneration = true
+                            }
+                            .padding(.horizontal)
                         }
 
                         // Quick stats
@@ -123,6 +136,9 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showImageTo3D) {
                 ImageTo3DView()
+            }
+            .sheet(isPresented: $showBatchGeneration) {
+                BatchGenerationView()
             }
         }
     }

@@ -7,7 +7,8 @@ A stunning SwiftUI iOS app that allows users to generate 3D models from text des
 ### Core Features
 - **Text to 3D**: Generate 3D models from text descriptions
 - **Image to 3D**: Convert images into 3D models
-- **ARKit Integration**: View generated models in augmented reality
+- **Batch Generation**: Generate multiple models simultaneously
+- **Advanced AR Features**: View models in AR with animations and interactions
 - **Model Gallery**: Browse, manage, and favorite your 3D models
 - **Multiple Export Formats**: GLB, FBX, OBJ, USDZ
 - **Real-time Progress Tracking**: Monitor generation progress in real-time
@@ -25,6 +26,19 @@ A stunning SwiftUI iOS app that allows users to generate 3D models from text des
   - AI model selection (Meshy-4, Meshy-5, Meshy-6)
   - Polycount control (100 - 100,000)
   - Texture refinement options
+- **Advanced AR Capabilities**:
+  - Tap to animate models
+  - Pinch to scale, drag to move, rotate gestures
+  - Multiple object placement
+  - Dynamic lighting and shadows
+  - Physics simulation
+  - AR screenshots
+  - Occlusion and plane detection
+- **Batch Generation**:
+  - Create multiple models from text or images at once
+  - Queue management with progress tracking
+  - Batch operations (cancel, retry)
+  - Cost estimation for batch jobs
 - **Firebase Integration**:
   - Authentication
   - Firestore database
@@ -179,7 +193,8 @@ MeshyApp/
 │   │   ├── ImageTo3DView.swift
 │   │   ├── GalleryView.swift
 │   │   ├── CreditsView.swift
-│   │   └── ProfileView.swift
+│   │   ├── ProfileView.swift
+│   │   └── BatchGenerationView.swift
 │   ├── ViewModels/                 # View models
 │   │   ├── GenerationViewModel.swift
 │   │   └── GalleryViewModel.swift
@@ -189,7 +204,8 @@ MeshyApp/
 │   │   ├── FirestoreService.swift
 │   │   └── PurchaseManager.swift
 │   ├── ARViews/                    # ARKit components
-│   │   └── ARViewContainer.swift
+│   │   ├── ARViewContainer.swift
+│   │   └── AdvancedARView.swift
 │   ├── Utilities/                  # Utilities
 │   │   └── NeonTheme.swift
 │   ├── Resources/                  # Resources
@@ -224,14 +240,46 @@ MeshyApp/
 6. Tap "Generate 3D Model"
 7. Wait for generation to complete
 
-### Viewing in AR
+### Viewing in AR (Advanced)
 
 1. Go to the "Gallery" tab
 2. Tap on a model
 3. Tap "View in AR"
 4. Point your camera at a flat surface
 5. Tap to place the model
-6. Pinch to scale, drag to move, rotate with two fingers
+6. **Interactions**:
+   - **Tap** on a model to play animations
+   - **Pinch** to scale
+   - **Drag** to move
+   - **Rotate** with two fingers
+   - **Long press** to delete a placed object
+7. Use the bottom controls for:
+   - **Place**: Add more copies of the model
+   - **Animate**: Play/stop animations
+   - **Photo**: Take AR screenshot
+   - **Clear**: Remove all objects
+8. Tap the gear icon for settings:
+   - Adjust model scale
+   - Enable/disable physics
+   - Toggle occlusion
+   - Configure lighting and shadows
+
+### Batch Generation
+
+1. Tap the "Create" tab
+2. Select "Batch Generation"
+3. Choose between "Text to 3D" or "Image to 3D" tabs
+4. **For Text to 3D**:
+   - Enter multiple prompts one by one
+   - Each prompt is added to the queue
+   - Select art style and AI model for each
+5. **For Image to 3D**:
+   - Select up to 10 images at once
+   - Choose AI model for all images
+6. Review the total credit cost
+7. Tap "Start All" to begin batch generation
+8. Monitor progress for each item in real-time
+9. Completed models appear in your gallery
 
 ### Managing Credits
 
@@ -315,13 +363,15 @@ For issues or questions:
 
 ## Roadmap
 
+- [x] Advanced AR features (animations, interactions)
+- [x] Batch generation
 - [ ] Social sharing features
 - [ ] Model collaboration
-- [ ] Advanced AR features (animations, interactions)
 - [ ] Model marketplace
 - [ ] AI-powered model recommendations
-- [ ] Batch generation
 - [ ] Custom model training
+- [ ] Cloud rendering for complex models
+- [ ] 3D model editing tools
 
 ---
 
