@@ -81,13 +81,14 @@ struct HomeView: View {
                             }
                             .padding(.horizontal)
 
-                            // Batch generation card
+                            // Batch generation card (Yearly Pro only)
                             CreationOptionCard(
                                 title: "Batch Generation",
-                                description: "Generate multiple models at once",
+                                description: "Yearly Pro exclusive feature",
                                 icon: "square.stack.3d.up.fill",
                                 gradient: NeonTheme.glowGradient,
-                                glowColor: NeonTheme.neonCyan
+                                glowColor: NeonTheme.neonCyan,
+                                isPremium: true
                             ) {
                                 showBatchGeneration = true
                             }
@@ -150,23 +151,43 @@ struct CreationOptionCard: View {
     let icon: String
     let gradient: LinearGradient
     let glowColor: Color
+    var isPremium: Bool = false
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
             HStack(spacing: 20) {
-                Image(systemName: icon)
-                    .font(.system(size: 40))
-                    .foregroundStyle(gradient)
-                    .frame(width: 70, height: 70)
-                    .background(NeonTheme.darkCard)
-                    .cornerRadius(15)
+                ZStack(alignment: .topTrailing) {
+                    Image(systemName: icon)
+                        .font(.system(size: 40))
+                        .foregroundStyle(gradient)
+                        .frame(width: 70, height: 70)
+                        .background(NeonTheme.darkCard)
+                        .cornerRadius(15)
+
+                    if isPremium {
+                        Image(systemName: "crown.fill")
+                            .font(.caption)
+                            .foregroundColor(NeonTheme.neonPurple)
+                            .padding(4)
+                            .background(Circle().fill(NeonTheme.cardBackground))
+                            .offset(x: 8, y: -8)
+                    }
+                }
 
                 VStack(alignment: .leading, spacing: 5) {
-                    Text(title)
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
+                    HStack(spacing: 6) {
+                        Text(title)
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
+
+                        if isPremium {
+                            Image(systemName: "crown.fill")
+                                .font(.caption)
+                                .foregroundColor(NeonTheme.neonPurple)
+                        }
+                    }
 
                     Text(description)
                         .font(.subheadline)

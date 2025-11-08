@@ -34,11 +34,12 @@ A stunning SwiftUI iOS app that allows users to generate 3D models from text des
   - Physics simulation
   - AR screenshots
   - Occlusion and plane detection
-- **Batch Generation**:
+- **Batch Generation** (Yearly Pro Exclusive):
   - Create multiple models from text or images at once
   - Queue management with progress tracking
   - Batch operations (cancel, retry)
   - Cost estimation for batch jobs
+  - Only available for Yearly Pro subscribers
 - **Firebase Integration**:
   - Authentication
   - Firestore database
@@ -157,7 +158,15 @@ private let apiKey = "YOUR_MESHY_API_KEY_HERE"
 
 #### Subscriptions
 - `com.meshyapp.subscription.monthly` - Monthly Pro ($19.99/month)
+  - 200 credits per month
+  - Priority generation queue
+  - Advanced AI models
+
 - `com.meshyapp.subscription.yearly` - Yearly Pro ($179.99/year)
+  - 250 credits per month
+  - All Monthly Pro features
+  - **Batch Generation (Exclusive)**
+  - Best value - Save 25%
 
 **Note**: Update product IDs in `PurchaseManager.swift` if you use different identifiers.
 
@@ -264,22 +273,26 @@ MeshyApp/
    - Toggle occlusion
    - Configure lighting and shadows
 
-### Batch Generation
+### Batch Generation (Yearly Pro Exclusive)
+
+**Note**: This feature is only available for Yearly Pro subscribers. Free and Monthly Pro users will see an upgrade prompt.
 
 1. Tap the "Create" tab
-2. Select "Batch Generation"
-3. Choose between "Text to 3D" or "Image to 3D" tabs
-4. **For Text to 3D**:
-   - Enter multiple prompts one by one
-   - Each prompt is added to the queue
-   - Select art style and AI model for each
-5. **For Image to 3D**:
-   - Select up to 10 images at once
-   - Choose AI model for all images
-6. Review the total credit cost
-7. Tap "Start All" to begin batch generation
-8. Monitor progress for each item in real-time
-9. Completed models appear in your gallery
+2. Select "Batch Generation" (marked with crown icon)
+3. If not subscribed to Yearly Pro, you'll see an upgrade screen
+4. **For Yearly Pro subscribers:**
+   - Choose between "Text to 3D" or "Image to 3D" tabs
+   - **For Text to 3D**:
+     - Enter multiple prompts one by one
+     - Each prompt is added to the queue
+     - Select art style and AI model for each
+   - **For Image to 3D**:
+     - Select up to 10 images at once
+     - Choose AI model for all images
+   - Review the total credit cost
+   - Tap "Start All" to begin batch generation
+   - Monitor progress for each item in real-time
+   - Completed models appear in your gallery
 
 ### Managing Credits
 

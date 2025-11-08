@@ -103,6 +103,7 @@ class PurchaseManager: NSObject, ObservableObject {
             productIdentifier: "com.meshyapp.subscription.yearly",
             features: [
                 "250 credits per month",
+                "Batch Generation (Exclusive)",
                 "Priority generation queue",
                 "Advanced AI models",
                 "Unlimited AR viewing",

@@ -10,8 +10,14 @@ import PhotosUI
 
 struct BatchGenerationView: View {
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var authService: AuthenticationService
     @StateObject private var viewModel = BatchGenerationViewModel()
     @State private var selectedTab = 0
+    @State private var showUpgradeSheet = false
+
+    var isYearlySubscriber: Bool {
+        authService.user?.subscriptionType == .yearly
+    }
 
     var body: some View {
         NavigationView {
@@ -19,37 +25,58 @@ struct BatchGenerationView: View {
                 NeonTheme.background
                     .ignoresSafeArea()
 
-                VStack(spacing: 0) {
-                    // Header
-                    VStack(spacing: 10) {
-                        Image(systemName: "square.stack.3d.up.fill")
-                            .font(.system(size: 60))
-                            .foregroundStyle(NeonTheme.glowGradient)
-                            .neonGlow(color: NeonTheme.neonCyan)
+                if !isYearlySubscriber {
+                    // Paywall for non-yearly subscribers
+                    BatchGenerationPaywall(showUpgradeSheet: $showUpgradeSheet)
+                } else {
+                    // Full batch generation interface
+                    VStack(spacing: 0) {
+                        // Header
+                        VStack(spacing: 10) {
+                            Image(systemName: "square.stack.3d.up.fill")
+                                .font(.system(size: 60))
+                                .foregroundStyle(NeonTheme.glowGradient)
+                                .neonGlow(color: NeonTheme.neonCyan)
 
-                        Text("Batch Generation")
-                            .font(.system(size: 32, weight: .bold))
+                            Text("Batch Generation")
+                                .font(.system(size: 32, weight: .bold))
+                                .foregroundColor(.white)
+
+                            Text("Generate multiple 3D models at once")
+                                .font(.subheadline)
+                                .foregroundColor(NeonTheme.secondaryText)
+
+                            // Premium badge
+                            HStack {
+                                Image(systemName: "crown.fill")
+                                    .foregroundColor(NeonTheme.neonPurple)
+                                Text("Yearly Pro Feature")
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                            }
                             .foregroundColor(.white)
+                            .padding(.horizontal, 15)
+                            .padding(.vertical, 8)
+                            .background(NeonTheme.cardBackground)
+                            .cornerRadius(20)
+                            .neonGlow(color: NeonTheme.neonPurple, radius: 8)
+                        }
+                        .padding(.top)
 
-                        Text("Generate multiple 3D models at once")
-                            .font(.subheadline)
-                            .foregroundColor(NeonTheme.secondaryText)
-                    }
-                    .padding(.top)
+                        // Tab selector
+                        Picker("Type", selection: $selectedTab) {
+                            Text("Text to 3D").tag(0)
+                            Text("Image to 3D").tag(1)
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                        .padding()
 
-                    // Tab selector
-                    Picker("Type", selection: $selectedTab) {
-                        Text("Text to 3D").tag(0)
-                        Text("Image to 3D").tag(1)
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
-                    .padding()
-
-                    // Content
-                    if selectedTab == 0 {
-                        BatchTextTo3DView(viewModel: viewModel)
-                    } else {
-                        BatchImageTo3DView(viewModel: viewModel)
+                        // Content
+                        if selectedTab == 0 {
+                            BatchTextTo3DView(viewModel: viewModel)
+                        } else {
+                            BatchImageTo3DView(viewModel: viewModel)
+                        }
                     }
                 }
             }
@@ -63,14 +90,137 @@ struct BatchGenerationView: View {
                 }
 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { viewModel.startBatchGeneration() }) {
-                        Text("Start All")
-                            .foregroundColor(NeonTheme.neonCyan)
-                            .fontWeight(.semibold)
+                    if isYearlySubscriber {
+                        Button(action: { viewModel.startBatchGeneration() }) {
+                            Text("Start All")
+                                .foregroundColor(NeonTheme.neonCyan)
+                                .fontWeight(.semibold)
+                        }
+                        .disabled(viewModel.batchItems.isEmpty || viewModel.isGenerating)
                     }
-                    .disabled(viewModel.batchItems.isEmpty || viewModel.isGenerating)
                 }
             }
+            .sheet(isPresented: $showUpgradeSheet) {
+                CreditsView()
+            }
+        }
+    }
+}
+
+// MARK: - Batch Generation Paywall
+struct BatchGenerationPaywall: View {
+    @Binding var showUpgradeSheet: Bool
+
+    var body: some View {
+        VStack(spacing: 30) {
+            Spacer()
+
+            // Lock icon
+            ZStack {
+                Circle()
+                    .fill(NeonTheme.primaryGradient)
+                    .frame(width: 120, height: 120)
+                    .neonGlow(color: NeonTheme.neonPurple, radius: 30)
+
+                Image(systemName: "lock.fill")
+                    .font(.system(size: 50))
+                    .foregroundColor(.white)
+            }
+
+            // Title and description
+            VStack(spacing: 15) {
+                HStack {
+                    Image(systemName: "crown.fill")
+                        .foregroundColor(NeonTheme.neonPurple)
+                    Text("Yearly Pro Exclusive")
+                        .font(.title)
+                        .fontWeight(.bold)
+                }
+                .foregroundColor(.white)
+
+                Text("Batch Generation is available exclusively for Yearly Pro subscribers")
+                    .font(.headline)
+                    .foregroundColor(NeonTheme.secondaryText)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+            }
+
+            // Features
+            VStack(alignment: .leading, spacing: 20) {
+                PaywallFeature(
+                    icon: "square.stack.3d.up.fill",
+                    title: "Batch Generation",
+                    description: "Create multiple models at once"
+                )
+
+                PaywallFeature(
+                    icon: "star.fill",
+                    title: "250 Credits/Month",
+                    description: "More credits than monthly plan"
+                )
+
+                PaywallFeature(
+                    icon: "bolt.fill",
+                    title: "Priority Queue",
+                    description: "Faster generation times"
+                )
+
+                PaywallFeature(
+                    icon: "dollarsign.circle.fill",
+                    title: "Best Value",
+                    description: "Save 25% compared to monthly"
+                )
+            }
+            .padding()
+            .neonCard()
+            .padding(.horizontal)
+
+            Spacer()
+
+            // Upgrade button
+            VStack(spacing: 15) {
+                Button(action: { showUpgradeSheet = true }) {
+                    HStack {
+                        Image(systemName: "crown.fill")
+                        Text("Upgrade to Yearly Pro")
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(NeonButtonStyle())
+                .padding(.horizontal)
+
+                Text("Only $179.99/year ($14.99/month)")
+                    .font(.subheadline)
+                    .foregroundColor(NeonTheme.neonCyan)
+            }
+            .padding(.bottom, 30)
+        }
+    }
+}
+
+struct PaywallFeature: View {
+    let icon: String
+    let title: String
+    let description: String
+
+    var body: some View {
+        HStack(spacing: 15) {
+            Image(systemName: icon)
+                .font(.title2)
+                .foregroundColor(NeonTheme.neonCyan)
+                .frame(width: 40)
+
+            VStack(alignment: .leading, spacing: 3) {
+                Text(title)
+                    .font(.headline)
+                    .foregroundColor(.white)
+
+                Text(description)
+                    .font(.caption)
+                    .foregroundColor(NeonTheme.secondaryText)
+            }
+
+            Spacer()
         }
     }
 }
